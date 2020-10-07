@@ -1,3 +1,5 @@
+# https://trends.google.com/trends/explore?date=all&geo=US&q=predictive%20analytics
+
 # Libraries
 # devtools::install_github('filipezabala/jurimetrics')
 library(jurimetrics)
