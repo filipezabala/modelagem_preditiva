@@ -4,12 +4,12 @@
 % pacotes
 % \usepackage{Sweave} % para usar o Sweave, oras
 \SweaveOpts{concordance=FALSE} % para chamar outros arquivos Rnw, conforme https://support.rstudio.com/hc/en-us/articles/200486298-Working-with
-\usepackage[brazil]{babel}
+\usepackage[brazil]{babel} % sudo tlmgr install babel-brazil   % sudo tlmgr update --self  % sudo tlmgr install babel-portuges 
 \usepackage[utf8]{inputenc}
 \usepackage{fancybox}
-\usepackage{textpos}
+\usepackage{textpos}  % sudo tlmgr install textpos
 \usepackage{hyperref}
-\usepackage{tcolorbox} % para caixas coloridas
+\usepackage{tcolorbox} % para caixas coloridas  % sudo tlmgr install tcolorbox
 
 % Blind footnotes
 \newcommand\blfootnote[1]{%
@@ -35,11 +35,13 @@ linktoc=all,
 % conteúdo
 \title{Modelagem Preditiva}
 \author{Filipe J. Zabala}
-\institute{\href{http://www.pucrs.br/politecnica/}{Escola Politécnica} \\ \href{http://www.pucrs.br/}{PUCRS}}
-\date{2019-11-30}
+\institute{\href{https://www.pucrs.br/politecnica/}{Escola Politécnica} \\ 
+           \href{https://www.pucrs.br/}{PUCRS} \\
+           \href{https://github.com/filipezabala/}{github.com/filipezabala}}
+\date{2021-06-21}
 
 \usetheme{Pittsburgh}
-\usecolortheme{owl}
+\usecolortheme{owl} % sudo tlmgr install beamercolorthemeowl
 
 % logo
 \addtobeamertemplate{frametitle}{}{%
@@ -63,8 +65,8 @@ Filipe J. Zabala $\cdot$ \url{filipe.zabala@pucrs.br}
     \item 2000-2004 Bacharel em Estatística (IME-UFRGS)
     \item 2006-2009 Mestre em Estatística (IME-USP)
     \item 2007-2009 Analista do Banco Itaú S.A.
-    \item 2009-2019 Sócio da ZN Consultoria Estatística
-    \item 2010-2019 Professor da Escola Politécnica da PUCRS
+    \item 2009-$\hphantom{2021}$ Sócio da ZN Consultoria Estatística
+    \item 2010-$\hphantom{2021}$ Professor da Escola Politécnica da PUCRS
   \end{itemize}
 \end{frame}
 
@@ -166,7 +168,7 @@ Filipe J. Zabala $\cdot$ \url{filipe.zabala@pucrs.br}
   \pause
   \item A metodologia dos institutos de pesquisa ignora que a soma dos percentuais deve ser 100\%
   \pause
-  \item \href{http://www.estatisticaclassica.com/jurimetria/dt.html}{Desempate técnico}
+  \item \href{http://www.filipezabala.com/cursos/dt.html}{Desempate técnico}
   \pause
   \item \href{http://www.pollingdata.com.br/}{Polling Data}
   \end{itemize}
@@ -186,7 +188,7 @@ Filipe J. Zabala $\cdot$ \url{filipe.zabala@pucrs.br}
     	\item \href{https://doi.org/10.1017/CBO9780511569647}{Aitchison \& Dunsmore (1975) - Statistical Prediction Analysis}
     	\item \href{https://doi.org/10.1201/9780203742310}{Seymour Geisser (1993) - Predictive Inference - An Introduction}
     	\item \href{https://projecteuclid.org/euclid.ss/1009213726}{Breiman (2001) - Statistical Modeling: The Two Cultures}
-    	\item \href{http://www.estatisticaclassica.com/jurimetria/zabala2009.pdf}{Zabala (2009) - Desempate Técnico}
+    	\item \href{http://www.filipezabala.com/artigos/zabala2009desempate.pdf}{Zabala (2009) - Desempate Técnico}
     	\item \href{https://doi.org/10.1017/9781139236003}{Clarke \& Clarke (2018) - Predictive Statistics - Analysis and Inference Beyond Models}
     	\item \href{https://otexts.com/fpp2/}{Hyndman \& Athanasopoulos (2018) - Forecasting: Principles and Practice}
     	\item \href{http://www.rizbicki.ufscar.br/sml.pdf}{Izbicki \& Santos (2019) - Machine Learning sob a ótica da Estatística}

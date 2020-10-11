@@ -13,12 +13,12 @@ inicio <- Sys.time()
 
 # Working directory
 getwd()
-setwd('~/Dropbox/PUC/@Semestres/2019-2/MBA-DS/apresentacao/')
+setwd('~/Dropbox/PUC/Extensão/MBA-DS/apresentacao/presentation/')
 options(continue = ' ', digits = 5) # Para retirar os '+' entre as linhas do codigo
 # options(continue = ' ', prompt = ' ') # Para retirar os '+' entre as linhas do codigo e '>' do prompt
 
 # Gerando o arquivo .tex
-Sweave(file   = 'mp.Rnw',
+Sweave(file = 'mp.Rnw',
   output = 'mp.tex',
   encoding = 'utf8')
 
