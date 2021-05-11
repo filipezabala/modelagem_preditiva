@@ -4,7 +4,7 @@
 % pacotes
 % \usepackage{Sweave} % para usar o Sweave, oras
 \SweaveOpts{concordance=FALSE} % para chamar outros arquivos Rnw, conforme https://support.rstudio.com/hc/en-us/articles/200486298-Working-with
-\usepackage[brazil]{babel} % sudo tlmgr install babel-brazil   % sudo tlmgr update --self  % sudo tlmgr install babel-portuges 
+\usepackage[brazil]{babel} % sudo tlmgr install babel-brazil   % sudo tlmgr update --self  % sudo tlmgr install babel-portuges
 \usepackage[utf8]{inputenc}
 \usepackage{fancybox}
 \usepackage{textpos}  % sudo tlmgr install textpos
@@ -35,7 +35,7 @@ linktoc=all,
 % conteúdo
 \title{Modelagem Preditiva}
 \author{Filipe J. Zabala}
-\institute{\href{https://www.pucrs.br/politecnica/}{Escola Politécnica} \\ 
+\institute{\href{https://www.pucrs.br/politecnica/}{Escola Politécnica} \\
            \href{https://www.pucrs.br/}{PUCRS} \\
            \href{https://github.com/filipezabala/}{github.com/filipezabala}}
 \date{2021-06-21}
@@ -97,11 +97,11 @@ Filipe J. Zabala $\cdot$ \url{filipe.zabala@pucrs.br}
 \section{Inferência bayesiana}
 \begin{frame}{\secname}
     \begin{itemize}
-    \item Priori: opinião antes de observar os dados \[ \pi(\theta) \]
+    \item Priori: opinião (sobre $\theta$) antes de observar os dados \[ \pi(\theta) \]
     \pause
     \item Verossimilhança: informação dos dados \[ L(X|\theta) \]
     \pause
-    \item Posteriori: opinião depois de observar os dados \[ \pi(\theta|X) \]
+    \item Posteriori: opinião (sobre $\theta$) depois de observar os dados \[ \pi(\theta|X) \]
     \end{itemize}
 \end{frame}
 
@@ -188,7 +188,7 @@ Filipe J. Zabala $\cdot$ \url{filipe.zabala@pucrs.br}
     	\item \href{https://doi.org/10.1017/CBO9780511569647}{Aitchison \& Dunsmore (1975) - Statistical Prediction Analysis}
     	\item \href{https://doi.org/10.1201/9780203742310}{Seymour Geisser (1993) - Predictive Inference - An Introduction}
     	\item \href{https://projecteuclid.org/euclid.ss/1009213726}{Breiman (2001) - Statistical Modeling: The Two Cultures}
-    	\item \href{http://www.filipezabala.com/artigos/zabala2009desempate.pdf}{Zabala (2009) - Desempate Técnico}
+    	\item \href{https://doi.org/10.11606/D.45.2009.tde-01032021-140004}{Zabala (2009) - Desempate Técnico}
     	\item \href{https://doi.org/10.1017/9781139236003}{Clarke \& Clarke (2018) - Predictive Statistics - Analysis and Inference Beyond Models}
     	\item \href{https://otexts.com/fpp2/}{Hyndman \& Athanasopoulos (2018) - Forecasting: Principles and Practice}
     	\item \href{http://www.rizbicki.ufscar.br/ame/}{Izbicki \& Santos (2020) - Aprendizado de Máquina: uma abordagem estatística}
