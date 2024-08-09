@@ -1,0 +1,433 @@
+% https://www.r-bloggers.com/2012/02/r-and-presentations-a-basic-example-of-knitr-and-beamer/
+
+\documentclass{beamer}
+
+% pacotes
+% \usepackage{Sweave} % para usar o Sweave, oras
+% \SweaveOpts{concordance=FALSE} % para chamar outros arquivos Rnw, conforme https://support.rstudio.com/hc/en-us/articles/200486298-Working-with
+\usepackage[brazil]{babel} % sudo tlmgr install babel-brazil   % sudo tlmgr update --self  % sudo tlmgr install babel-portuges
+\usepackage[utf8]{inputenc}
+\usepackage{fancybox}
+\usepackage{textpos}  % sudo tlmgr install textpos
+\usepackage{hyperref} % \href
+\usepackage{tcolorbox} % para caixas coloridas  % sudo tlmgr install tcolorbox
+
+
+% Blind footnotes
+\newcommand\blfootnote[1]{%
+  \begingroup
+  \renewcommand\thefootnote{}\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \endgroup
+}
+
+% bibliografia
+% \bibliographystyle{plain}
+% \bibliography{mp.bib}
+
+% configuração dos links
+\hypersetup
+{
+colorlinks=true,
+linkcolor=blue,
+urlcolor=blue,
+filecolor=blue,
+linktoc=all,
+}
+
+% pasta de imagens
+\graphicspath{{./img/}}
+
+
+% conteúdo
+\title{Modelagem Preditiva}
+\author{Filipe J. Zabala}
+\institute{\href{https://www.pucrs.br/politecnica/}{Escola Politécnica} \\
+           \href{https://www.pucrs.br/}{PUCRS} \\
+           \texttt{\href{http://filipezabala.com}{filipezabala.com}}}
+\date{2024-08-09}
+
+\usetheme{Pittsburgh}
+% \usecolortheme{owl} % sudo tlmgr install beamercolorthemeowl
+
+% logo
+\addtobeamertemplate{frametitle}{}{%
+\begin{textblock*}{10mm}(-.05\textwidth,-.85cm)
+\includegraphics[width=2cm]{logo_politecnica.png}
+\end{textblock*}}
+
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}
+    \frametitle{Sumário}
+    \tableofcontents
+\end{frame}
+
+\section{Minibio}
+\begin{frame}{\secname}
+Filipe J. Zabala $\cdot$ \url{filipe.zabala@pucrs.br}
+\vspace{1cm}
+  \begin{itemize}
+    \item 2000-2004 Bacharel em Estatística \href{https://lume.ufrgs.br/handle/10183/130892}{IME-UFRGS}
+    \item 2006-2009 Mestre em Estatística \href{https://www.teses.usp.br/teses/disponiveis/45/45133/tde-01032021-140004/pt-br.php}{IME-USP}
+    \item 2007-2009 Analista do \href{https://www.itau.com.br/}{Banco Itaú S.A.}
+    \item 2009-$\hphantom{2021}$ Sócio da \href{https://filipezabala.com/}{ZN Consultoria Estatística}
+    \item 2010-$\hphantom{2021}$ Professor da \href{https://portal.pucrs.br/ensino/escola-politecnica/}{Escola Politécnica da PUCRS}
+    \item 2019-$\hphantom{2024}$ Doutorando no \href{https://www.ufrgs.br/ppgpsiquiatria/}{PPG Psiquiatria e C.C. UFRGS}
+  \end{itemize}
+\end{frame}
+
+
+\section{Para começar}
+\begin{frame}{\secname}
+    \begin{itemize}
+    \item \textit{Every once in a while there is house cleaning in mathematics. Some old names are discarded, some dusted off and refurbished; new theories, new additions to the household are assigned a place and name.} Kasner and Newman (1940,3)
+    \pause
+    \item Estatística \textit{vs} Ciência de Dados \textit{vs} Analytics \textit{vs} IA \textit{vs} ...
+    \pause
+    \item Teoria da Decisão \textit{vs} Aprendizado por Reforço \textit{vs} Aprendizado de Máquina
+    \pause
+    \item Maximizar a utilidade esperada \textit{vs} Maximizar a recompensa \textit{vs} Minimizar o erro
+    \end{itemize}
+\end{frame}
+
+\section{Sobre modelagem preditiva}
+\begin{frame}{\secname}
+    \begin{itemize}
+    \item Do Latim \textit{praedicere}, anunciar antecipadamente
+    \pause
+    \item Métodos para predizer novos valores de $X$
+      \begin{itemize}
+      \item $X$: variável de interesse
+      \item $\theta$: parâmetro associado a $X$
+      \end{itemize}
+    \pause
+    \item \textit{As duas culturas} de Leo Breiman (2001):
+      \begin{itemize}
+      \item interpretar $\theta$ \textit{vs} predizer $X$
+      \end{itemize}
+    % \pause
+    % \item Bruno de Finetti (1974): \textit{Probability, like beauty, exists only in the mind.}
+    \pause
+    \item Debabrata Basu (1988): \textit{Information is what information does. It changes opinion (about $\theta$).}
+    \pause
+    \item George Box (1979): \textit{All models are wrong but some are useful.}
+    \end{itemize}
+\end{frame}
+
+
+\section{Inferência bayesiana}
+\begin{frame}{\secname}
+    \begin{itemize}
+    \item Priori: opinião (sobre $\theta$) em forma de probabilidade antes de observar os dados \[ \pi(\theta) \]
+    \pause
+    \item Verossimilhança: função (de $\theta$) com informação dos dados \[ L(\theta|x) \]
+    \pause
+    \item Posteriori: opinião (sobre $\theta$) em forma de probabilidade depois de observar os dados \[ \pi(\theta|x) \]
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}{\secname}
+    \begin{itemize}
+    \item Operação bayesiana: calibrar a opinião à luz dos dados \[ \pi(\theta|x) = \frac{\pi(\theta) L(\theta|x)}{P(X=x)} \]
+    % \pause
+    % \item Independência condicional (em relação a $\theta$)
+    \pause
+    \item `A posteriori de hoje é a priori de amanhã' (Máxima bayesiana)
+    \pause
+    \item Preditiva: distribuição de $X$ \[ P(X=x) = \int_{\theta} \pi(\theta) L(\theta|x) d\theta \]
+    \pause
+    \item A probabilidade de o próximo resultado da moeda ser `cara` \[ Pr(X_{n+1}=\textrm{cara}) = \frac{r+1}{n+2} \]
+    \end{itemize}
+\end{frame}
+
+% \section{Inferência bayesiana}
+\begin{frame}{\secname}
+    \begin{itemize}
+    \item Variáveis permutáveis: a ordem das observações é indiferente \[ Pr(X_1=x_1, \ldots, X_N=x_N) = Pr(X_{\pi(1)}=x_1, \ldots, X_{\pi(N)}=x_N)  \]
+    \pause
+    \item Teorema da representação de de Finetti (1930) \[ Pr(X_1=x_1, \ldots, X_N=x_N) = \int_{\theta} \theta^a (1-\theta)^b \mu(d\theta) \]
+    \pause
+    \item Flexibiliza a suposição de independência
+    \pause
+    \item Trata $\theta$ apenas como uma variável de integração
+    \end{itemize}
+\end{frame}
+
+
+\section{Exemplos}
+\begin{frame}{Ex. 1: Previsão de demanda}
+  \begin{itemize}
+  \item Objetivo: prever a demanda de bebida em função da temperatura máxima do dia
+  \item \href{https://filipezabala.com/eb/rls.html}{Seção 7.2} de \href{https://filipezabala.com/eb}{Zabala (2024) - Estatística Básica}
+  \item $Y$: número de garrafas de bebida consumidas
+  \item $X$: temperatura máxima do dia em $^{\circ}{\rm C}$
+  \item Modelo: $y = \hat{\beta}_0 + \hat{\beta}_1 x$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Ex. 1: Previsão de demanda}
+\fontsize{8pt}{8pt}\selectfont
+Obtendo dados e estatísticas descritivas.
+<<data>>=
+dr <- read.table('https://filipezabala.com/data/drinks.txt',
+                 header = TRUE)
+str(dr)  # estrutura dos dados
+summary(dr)
+@
+\end{frame}
+
+\begin{frame}[fragile]{Ex. 1: Previsão de demanda}
+\fontsize{8pt}{8pt}\selectfont
+<<plot_base, out.width='.6\\linewidth', dev='pdf', fig.align='center'>>=
+plot(dr, xlab = 'Temperatura máxima', ylab = 'Número de garrafas',
+     cex = 1.3, cex.axis = 1.3, cex.lab = 1.3)
+legend(26, 235, legend=paste0('r = ', round(cor(dr$temp,dr$gar),3)),
+       cex = 1.2, box.lty = 0)
+@
+\end{frame}
+
+\begin{frame}[fragile]{Ex. 1: Previsão de demanda}
+\fontsize{8pt}{8pt}\selectfont
+<<fit>>=
+fit <- lm(gar ~ temp, data = dr) # modelo clássico
+summary(fit)
+(pr <- predict(fit, newdata = data.frame(temp = 39)))
+@
+\end{frame}
+
+\begin{frame}[fragile]{Ex. 1: Previsão de demanda}
+\fontsize{8pt}{8pt}\selectfont
+<<abline, out.width='.6\\linewidth', dev='pdf', fig.align='center'>>=
+plot(dr, xlab = 'Temperatura máxima', ylab = 'Número de garrafas',
+     cex = 1.3, cex.axis = 1.3, cex.lab = 1.3)
+abline(fit$coefficients[1], fit$coefficients[2], col = 'red')
+abline(v = 39, col = 'blue', lty = 2)
+abline(h = pr, col = 'blue', lty = 2)
+@
+\end{frame}
+
+\begin{frame}[fragile]{Ex. 1: Previsão de demanda}
+\fontsize{8pt}{8pt}\selectfont
+<<fit_bayes>>=
+# modelo bayesiano
+options(mc.cores = parallel::detectCores())
+fit_stan <- rstanarm::stan_glm(gar ~ temp, data = dr, family = gaussian)
+fit_stan
+@
+\end{frame}
+
+
+\begin{frame}[fragile]{Ex. 1: Previsão de demanda}
+\textit{If the model fits, then replicated data generated under the model should look similar to observed data.} Gelman et al (2013,143)
+\fontsize{8pt}{8pt}\selectfont
+<<ppc, out.width='.5\\linewidth', dev='pdf', fig.align='center'>>=
+rstanarm::pp_check(fit_stan) # posterior predictive checking
+@
+\end{frame}
+
+
+
+\begin{frame}[fragile]{Ex. 2: Previsão de volume processual}
+  \begin{itemize}
+  \item \href{https://github.com/filipezabala/jurimetrics/}{\texttt{jurimetrics}}: ferramentas para \href{https://ww2.esmarn.tjrn.jus.br/revistas/index.php/revista\_direito\_e\_liberdade/article/view/732}{Jurimetria} %\cite{zabala2024jurimetrics}
+  \pause
+  \item \texttt{tjrs\_2000\_2017}: série mensal de jan/2000 a dez/2017 da cota inferior de volume processual no segundo grau do TJ-RS
+  \end{itemize}
+\fontsize{6pt}{6pt}\selectfont  
+<<tjrs0017, message=FALSE, warning=FALSE>>=
+jurimetrics::tjrs_00_17$count_adjusted
+@
+\end{frame}
+
+\begin{frame}[fragile]{Ex. 2: Previsão de volume processual}
+\fontsize{8pt}{8pt}\selectfont
+<<juri, warning=FALSE, message=FALSE, fig.height=4>>=
+library(jurimetrics)
+y <- ts(tjrs_00_17$count_adjusted, start = c(2000,1), frequency = 12)
+fits(y, show.sec.graph = FALSE, show.value = FALSE)
+@
+\end{frame}
+
+
+\begin{frame}{Ex. 3: \href{https://en.wikipedia.org/wiki/Benford\%27s_law}{Lei de Newcomb-Benford}}
+  \begin{itemize}
+  \item \textit{That the ten digits do not occur with equal frequency must be evident to any one making much use of logarithmic tables, and noticing how much faster  the first pages wear out than the last ones.} $\;\;$ \href{https://en.wikipedia.org/wiki/Simon_Newcomb}{Simon Newcomb} (1881,39)
+  \pause
+  \bigskip
+  \begin{center}
+  \includegraphics[scale=0.3]{newcomb1881.png}\footnote{\tiny{Newcomb (1881,40) - Note on the Frequency of Use of the Different Digits in Natural Numbers}}
+  \end{center}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Ex. 3: \href{https://en.wikipedia.org/wiki/Benford\%27s_law}{Lei de Newcomb-Benford}}
+  \begin{center}
+  \includegraphics[scale=0.28]{benford1938.png}\footnote{\tiny{\href{https://en.wikipedia.org/wiki/Frank_Benford}{Frank Benford} (1938,553) - The Law of Anomalous Numbers}}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Ex. 3: \href{https://en.wikipedia.org/wiki/Benford\%27s_law}{Lei de Newcomb-Benford}}
+  \begin{itemize}
+    \item Frequência do dígito $a$ na 1$^a$ posição
+  \end{itemize}
+  \[F_a = \log_{10} \left( \frac{a+1}{a} \right)\]
+  \[a=1,2,\ldots,9\]
+\end{frame}
+
+
+\begin{frame}[fragile]{Ex. 3: \href{https://en.wikipedia.org/wiki/Benford\%27s_law}{Lei de Newcomb-Benford}}
+\fontsize{8pt}{8pt}\selectfont
+<<Fa, out.width='.6\\linewidth', dev='pdf', fig.align='center'>>=
+Fa <- function(a){log((a+1)/a, base = 10)}
+plot(Fa(1:9))
+@
+\end{frame}
+
+\begin{frame}[fragile]{Ex. 3: \href{https://en.wikipedia.org/wiki/Benford\%27s_law}{Lei de Newcomb-Benford}}
+ \begin{itemize}
+    \item Frequência do dígito $b$ na 2$^a$ posição seguindo um dígito $a$ na 1$^a$ posição
+  \end{itemize}
+  \[F_{ab} = \frac{\log_{10} \left( \frac{ab+1}{ab} \right)}{\log_{10} \left( \frac{a+1}{a} \right)} \]
+  \[ab = \{1,2,\ldots,9\} \times \{0,1,\ldots,9\}\]
+\fontsize{8pt}{8pt}\selectfont
+<<Fab>>=
+Fab <- function(a,b){
+  ab <- as.numeric(paste0(a,b))
+  fab <- log((ab+1)/ab, base = 10)/Fa(a)
+  return(list(ab=ab, Fab=fab))
+}
+Fab(5,0)
+@
+\end{frame}
+
+\begin{frame}[fragile]{Ex. 3: \href{https://en.wikipedia.org/wiki/Benford\%27s_law}{Lei de Newcomb-Benford}}
+\fontsize{7pt}{7pt}\selectfont
+<<Fab_plot, out.width='.5\\linewidth', dev='pdf', fig.align='center'>>=
+grade <- expand.grid(1:9,0:9)
+grade <- sort(as.numeric(paste0(grade[,1],grade[,2])))
+prob <- data.frame(grade=grade, Fab=NA)
+k <- 0
+for(i in 1:9){
+  for(j in 0:9){
+    k <- k+1
+    prob[k,2] <- Fab(i,j)$Fab
+  }
+}
+plot(prob[,1], prob[,2], xlab = '', ylab='')
+@
+\end{frame}
+
+\begin{frame}[fragile]{Ex. 3: \href{https://en.wikipedia.org/wiki/Benford\%27s_law}{Lei de Newcomb-Benford}}
+\fontsize{7pt}{7pt}\selectfont
+<<lib_benford, out.width='.8\\linewidth', fig.width=12, dev='pdf', fig.align='center'>>=
+library(benford.analysis)
+data(corporate.payment)
+bfd <- benford(corporate.payment$Amount)
+plot(bfd)
+@
+\end{frame}
+
+
+\begin{frame}[fragile]{Ex. 4: \href{https://cran.r-project.org/web/packages/voice/index.html}{\texttt{voice}}}
+  \begin{itemize}
+    \item \href{https://github.com/filipezabala/voice/}{\texttt{voice}}: ferramentas para análise de voz, reconhecimento de falantes e inferência de humor
+  \end{itemize}
+  \pause
+\fontsize{7pt}{7pt}\selectfont
+<<voice, out.width='.8\\linewidth', fig.width=12, dev='pdf', fig.align='center'>>=
+library(voice)
+path2wav <- list.files(system.file('extdata', package = 'wrassp'),
+                       pattern = glob2rx('*.wav'), full.names = TRUE)
+E <- dplyr::tibble(subject_id = c(1,1,1,2,2,2,3,3,3), wav_path = path2wav)
+
+# resume o áudio por sujeito
+voice::tag(E, groupBy = 'subject_id')
+@
+\end{frame}
+
+
+\section{Publicidade de dados PÚBLICOS}
+\begin{frame}{\secname}
+  \begin{itemize}
+    \item \href{http://www.planalto.gov.br/ccivil_03/_ato2011-2014/2011/lei/l12527.htm}{Brasil (2011) Lei 12.527 de 18/11/2011}
+    \item \href{http://www.planalto.gov.br/ccivil_03/_ato2011-2014/2012/Decreto/D7724.htm}{Brasil(2012) Brasil. Decreto 7.724 de 16/05/2012}
+	\end{itemize}
+	\begin{center}
+  \includegraphics[scale=0.3]{lai12.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}{\secname}
+\blfootnote{\tiny{\href{https://www.artificiallawyer.com/2019/06/04/france-bans-judge-analytics-5-years-in-prison-for-rule-breakers/}{Artificial Lawyer (2019-06-04) - France Bans Judge Analytics, 5 Years In Prison For Rule Breakers}}}
+\begin{figure}
+\includegraphics[scale=0.35]{franca}
+\end{figure}
+\end{frame}
+
+\section{Privacidade de dados PESSOAIS}
+\begin{frame}{\secname}
+  \begin{itemize}
+    \item \href{http://www.dbis.informatik.hu-berlin.de/fileadmin/lectures/SS2011/VL_Privacy/Differential_Privacy.pdf}{Dwork (2006) - Differential Privacy}
+    \pause
+    \item \href{https://books.google.com.br/books/about/Weapons_of_Math_Destruction.html?id=CxD-DAAAQBAJ&redir_esc=y}{O'Neil (2016) - Weapons of Math Destruction}
+	\end{itemize}
+	\begin{center}
+  \includegraphics[scale=0.3]{weapons.jpg}
+  \end{center}
+\end{frame}
+
+% \section{Privacidade de dados PESSOAIS}
+\begin{frame}{\secname}
+  \begin{itemize}
+    \item \href{https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm}{Lei 13.709, de 14 de agosto de 2018}
+	\end{itemize}
+\bigskip
+	\begin{center}
+  \includegraphics[scale=0.3]{lgpdp.png}
+  \end{center}
+\end{frame}
+
+\section{Para saber mais}
+\begin{frame}{\secname}
+\fontsize{9pt}{9pt}\selectfont
+  \begin{enumerate}
+  \itemsep.5em
+  	\item \href{https://www.jstor.org/stable/2369148}{Newcomb (1881) - Note on the Frequency of Use of the Different Digits in Natural Numbers}
+  	\item \href{http://www.brunodefinetti.it/Opere/funzioneCaratteristica.pdf}{De Finetti (1930) - Funzione Caratteristica di un Fenomeno Aleatorio}
+  	\item \href{https://isidore.co/misc/Physics\%20papers\%20and\%20books/Zotero/storage/ZEBWDL73/Benford\%20-\%201938\%20-\%20The\%20Law\%20of\%20Anomalous\%20Numbers.pdf}{Benford (1938) - The Law of Anomalous Numbers}
+  	\item \href{https://archive.org/details/mathematicsimagi00kasnrich}{Kasner and Newman(1940) - Mathematics and the
+Imagination}
+  	\item \href{https://doi.org/10.1017/CBO9780511569647}{Aitchison \& Dunsmore (1975) - Statistical Prediction Analysis}
+  	\item \href{https://www.sciencedirect.com/science/article/abs/pii/B9780124381506500182}{Box (1979) - Robustness in the Strategy of Scientific Model Building}
+    \item \href{https://link.springer.com/book/10.1007/978-1-4612-3894-2}{Ghosh (1988) - Statistical Information and Likelihood - A collection of critical essays by Dr. D. Basu}
+    \item \href{https://doi.org/10.1201/9780203742310}{Seymour Geisser (1993) - Predictive Inference - An Introduction}
+    \item \href{https://projecteuclid.org/euclid.ss/1009213726}{Breiman (2001) - Statistical Modeling: The Two Cultures}
+    \item \href{https://doi.org/10.11606/D.45.2009.tde-01032021-140004}{Zabala (2009) - Desempate Técnico}
+	\end{enumerate}
+\end{frame}
+
+
+% \section{Para saber mais}
+\begin{frame}{\secname}
+\fontsize{9pt}{9pt}\selectfont
+  \begin{enumerate}
+  \setcounter{enumi}{10}
+  \itemsep.5em
+  	\item \href{https://web.williams.edu/Mathematics/sjmiller/public_html/cmu/21-499/handouts/benford/Fewster_SimpleExplanationBenfordLaw.pdf}{Fewster (2009) - A Simple Explanation of Benford’s Law}
+  	\item \href{https://ww2.esmarn.tjrn.jus.br/revistas/index.php/revista_direito_e_liberdade/article/view/732}{Zabala \& Silveira (2014) - Jurimetria: Estatística Aplicada ao Direito}
+  	\item \href{https://doi.org/10.1017/9781139236003}{Clarke \& Clarke (2018) - Predictive Statistics - Analysis and Inference Beyond Models}
+    \item \href{https://otexts.com/fpp2/}{Hyndman \& Athanasopoulos (2018) - Forecasting: Principles and Practice}
+    \item \href{https://arxiv.org/abs/2001.00476}{Zabala \& Silveira (2019) - Decades of Jurimetrics}  
+  	\item \href{http://www.rizbicki.ufscar.br/ame/}{Izbicki \& Santos (2020) - Aprendizado de Máquina: uma abordagem estatística}
+    \item \href{https://www.youtube.com/@filipezabala}{Zabala (2020) - Vídeos: Ciência de dados em software livre}
+  	\item \href{https://github.com/filipezabala/cddesl}{Zabala (2020) - Código: Ciência de dados em software livre}
+  	\item \href{https://doi.org/10.1016/j.physa.2020.125626}{Azevedo et al (2021) - A Benford’s Law based methodology for fraud detection in social welfare programs - Bolsa Familia analysis}
+  	\item \href{https://CRAN.R-project.org/package=voice}{Zabala (2023). voice: Tools for Voice Analysis, Speaker Recognition and Mood Inference}
+	\end{enumerate}
+\end{frame}
+
+\end{document}

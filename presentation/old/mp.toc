@@ -1,0 +1,6 @@
+\babel@toc {brazil}{}\relax 
+\beamer@sectionintoc {1}{Minibio}{3}{0}{1}
+\beamer@sectionintoc {2}{Sobre modelagem preditiva}{4}{0}{2}
+\beamer@sectionintoc {3}{Inferência bayesiana}{9}{0}{3}
+\beamer@sectionintoc {4}{Exemplos}{20}{0}{4}
+\beamer@sectionintoc {5}{Para saber mais}{30}{0}{5}
