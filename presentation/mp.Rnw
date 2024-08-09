@@ -350,6 +350,13 @@ voice::tag(E, groupBy = 'subject_id')
 \end{frame}
 
 
+\begin{frame}{Ex. 5: Tempo de operação de ATMs}
+	\begin{center}
+    \includegraphics[scale=0.25]{horasOp.png}
+  \end{center}
+\end{frame}
+
+
 \section{Publicidade de dados PÚBLICOS}
 \begin{frame}{\secname}
   \begin{itemize}
